@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: evolution-api
+    env: node
+    branch: main        # se seu branch principal for "master", troque para master
+    buildCommand: npm install
+    startCommand: bash -lc "export SERVER_PORT=$PORT && for i in {1..20}; do npx prisma migrate deploy --schema ./prisma/postgresql-schema.prisma && break || (echo 'prisma migrate failed, retrying...' && sleep 3); done; npm start"
+    envVars:
+      - key: DATABASE_ENABLED
+        value: "true"
+      - key: DATABASE_PROVIDER
+        value: "postgresql"
+      - key: LOG_LEVEL
+        value: "info"
